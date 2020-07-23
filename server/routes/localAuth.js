@@ -55,4 +55,8 @@ router.get("/user", auth, (req, res) => {
 		.then((user) => res.json(user));
 });
 
+router.get("/private", auth, (req, res) => {
+	res.send("private route accessed with token header");
+});
+
 module.exports = router;

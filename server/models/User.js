@@ -13,6 +13,20 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	lifts: [
+		{
+			name: { type: String, required: true },
+			sets: { type: Number, required: true },
+			reps: { type: Number, required: true },
+			currWeight: { type: Number, required: false },
+			startWeight: { type: Number, required: false },
+			liftHistory: [
+				{
+					date: { type: Date, required: true },
+				},
+			],
+		},
+	],
 	date: {
 		type: Date,
 		default: Date.now,
