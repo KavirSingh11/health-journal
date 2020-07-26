@@ -23,7 +23,19 @@ router.post("/signin", async (req, res) => {
 		res.status(400).send("Incorrect login");
 	}
 	const token = jwt.sign({ _id: user._id }, keys.tokenKey);
-	res.header("x-auth-token", token).json({ token });
+	const body = {
+		_id: user._id,
+		user: {
+			name: user.name,
+			email: user.email,
+		},
+		token: token,
+	};
+	try {
+		res.header("x-auth-token", token).json(body);
+	} catch (err) {
+		res.json(`Error: ${err.message}`);
+	}
 });
 
 router.post("/signup", async (req, res) => {
@@ -43,9 +55,19 @@ router.post("/signup", async (req, res) => {
 		const token = jwt.sign({ _id: user._id }, keys.tokenKey, {
 			expiresIn: 3600 * 5,
 		});
-		res
-			.header("x-auth-token", token)
-			.send(_.pick(user, ["_id", "name", "email", "date"]));
+		const resBody = {
+			_id: user._id,
+			user: {
+				name: user.name,
+				email: user.email,
+			},
+			token: token,
+		};
+		try {
+			res.header("x-auth-token", token).json(resBody);
+		} catch (err) {
+			res.json(`Error: ${err.message}`);
+		}
 	}
 });
 

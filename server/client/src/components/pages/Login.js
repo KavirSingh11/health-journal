@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { register } from "../../actions/authActions";
-import { isEqualWith } from "lodash";
+import { register, signin, loadUser } from "../../actions/authActions";
+import { clearErrors } from "../../actions/errorActions";
 class Login extends React.Component {
 	state = {
 		name: "",
@@ -10,6 +10,12 @@ class Login extends React.Component {
 		password: "",
 		showSignUp: false,
 	};
+
+	componentDidMount() {
+		if (this.props.token) {
+			this.props.loadUser(this.props.token);
+		}
+	}
 
 	handleSignUp() {
 		const { name, email, password } = this.state;
@@ -23,7 +29,12 @@ class Login extends React.Component {
 	}
 
 	handleLocalLogin() {
-		console.log(this.state);
+		const { email, password } = this.state;
+		const user = {
+			email,
+			password,
+		};
+		this.props.signin(user);
 	}
 
 	renderSignUp() {
@@ -91,10 +102,14 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		isAuth: state.auth.isAuthenticated,
+		token: state.auth.token,
 		error: state.error,
 	};
 };
 
 export default connect(mapStateToProps, {
 	register,
+	clearErrors,
+	signin,
+	loadUser,
 })(Login);

@@ -2,16 +2,26 @@ import React from "react";
 import { connect } from "react-redux";
 
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 class App extends React.Component {
 	render() {
 		return (
 			<div>
 				<div>App</div>
-				<Login />
+				{!this.props.isAuth ? <Login /> : <Dashboard />}
 			</div>
 		);
 	}
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+		isAuth: state.auth.isAuthenticated,
+		user: state.auth.user,
+		token: state.auth.token,
+		error: state.error,
+	};
+};
+
+export default connect(mapStateToProps)(App);
