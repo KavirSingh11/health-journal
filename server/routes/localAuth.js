@@ -41,7 +41,7 @@ router.post("/signup", async (req, res) => {
 		user.password = await bcrypt.hash(user.password, salt);
 		await user.save();
 		const token = jwt.sign({ _id: user._id }, keys.tokenKey, {
-			expiresIn: 3600 * 24 * 30,
+			expiresIn: 3600 * 5,
 		});
 		res
 			.header("x-auth-token", token)

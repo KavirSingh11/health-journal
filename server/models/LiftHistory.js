@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const HistorySchema = new mongoose.Schema({
-	userID: {
+	email: {
 		type: String,
 		required: true,
 	},
@@ -18,3 +18,6 @@ const HistorySchema = new mongoose.Schema({
 		required: true,
 	},
 });
+
+const LiftHistory = mongoose.model("history", HistorySchema);
+exports.LiftHistory = LiftHistory;

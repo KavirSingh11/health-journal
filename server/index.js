@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 // const passport = require("passport");
 
 const keys = require("./config/keys");
@@ -7,9 +8,9 @@ const PORT = 5000;
 const app = express();
 
 const localAuth = require("./routes/localAuth");
+const lifts = require("./routes/api/lifts");
 const googleAuth = require("./routes/googleAuth");
 const facebookAuth = require("./routes/facebookAuth");
-//const testRoutes = require("./routes/app");
 
 mongoose.connect(
 	keys.MongoURI,
@@ -22,10 +23,12 @@ mongoose.connect(
 	}
 );
 
+app.use(cors());
 app.use(express.json());
 
 //Routes
 app.use("/auth", localAuth);
+app.use("/api/lifts", lifts);
 //app.use("/test", testRoutes);
 // app.use('/oauth/google', googleAuth);
 // app.use('/oauth/facebook', facebookAuth);
