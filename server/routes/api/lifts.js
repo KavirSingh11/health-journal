@@ -7,14 +7,14 @@ const auth = require("../../middleware/auth");
 const { Lift } = require("../../models/Lifts");
 const { LiftHistory } = require("../../models/LiftHistory");
 
-router.get("/liftTypes", auth, async (req, res) => {
+router.post("/liftTypes/get", auth, async (req, res) => {
 	const email = req.body.email;
 	Lift.find({ email: email })
 		.select("-email -_id")
 		.then((lifts) => res.json(lifts))
 		.catch((err) => res.json(`Error ${err.message}`));
 });
-router.post("/liftTypes", auth, async (req, res) => {
+router.post("/liftTypes/add", auth, async (req, res) => {
 	const email = req.body.email;
 	const name = req.body.name;
 	const sets = req.body.sets;
@@ -52,7 +52,7 @@ router.delete("/liftTypes", auth, async (req, res) => {
 /*------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------*/
-router.get("/liftHistory/date", auth, async (req, res) => {
+router.post("/liftHistory/date", auth, async (req, res) => {
 	const email = req.body.email;
 	const date = req.body.date;
 	LiftHistory.find({ email, date })
@@ -60,7 +60,7 @@ router.get("/liftHistory/date", auth, async (req, res) => {
 		.then((history) => res.json(history))
 		.catch((err) => res.json(`Error: ${err.message}`));
 });
-router.get("/liftHistory/all", auth, async (req, res) => {
+router.post("/liftHistory/all", auth, async (req, res) => {
 	const email = req.body.email;
 	const name = req.body.name;
 	LiftHistory.find({ email, name })

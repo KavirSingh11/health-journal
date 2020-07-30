@@ -11,16 +11,11 @@ import {
 	REGISTER_FAIL,
 } from "../actions/types";
 
-export const loadUser = (token) => (dispatch, getState) => {
+export const loadUser = () => (dispatch, getState) => {
 	dispatch({ type: USER_LOADING });
-	const config = {
-		headers: {
-			"Content-type": "application/json",
-			"x-auth-token": token,
-		},
-	};
+
 	axios
-		.get("http://localhost:5000/auth/user", config)
+		.get("http://localhost:5000/auth/user", tokenConfig(getState))
 		.then((res) =>
 			dispatch({
 				type: USER_LOADED,
@@ -103,6 +98,5 @@ export const tokenConfig = (getState) => {
 	if (token) {
 		config.headers["x-auth-token"] = token;
 	}
-
 	return config;
 };

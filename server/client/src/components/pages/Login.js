@@ -11,12 +11,6 @@ class Login extends React.Component {
 		showSignUp: false,
 	};
 
-	componentDidMount() {
-		if (this.props.token) {
-			this.props.loadUser(this.props.token);
-		}
-	}
-
 	handleSignUp() {
 		const { name, email, password } = this.state;
 
