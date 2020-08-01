@@ -5,7 +5,13 @@ import { loadUser } from "../actions/authActions";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
+import "../css/app.css";
+
 class App extends React.Component {
+	state = {
+		maxWidth: 700,
+		setClass: "",
+	};
 	componentDidMount() {
 		if (this.props.token) {
 			this.props.loadUser(this.props.token);
@@ -13,8 +19,12 @@ class App extends React.Component {
 	}
 	render() {
 		return (
-			<div>
-				<div>App</div>
+			<div
+				className="main-display"
+				style={
+					this.props.isAuth ? { maxWidth: "1100px" } : { maxWidth: "800px" }
+				}
+			>
 				{!this.props.isAuth ? <Login /> : <Dashboard />}
 			</div>
 		);

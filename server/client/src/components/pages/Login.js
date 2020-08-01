@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 
 import { register, signin, loadUser } from "../../actions/authActions";
 import { clearErrors } from "../../actions/errorActions";
+import "../../css/login.css";
+
 class Login extends React.Component {
 	state = {
 		name: "",
@@ -33,7 +35,7 @@ class Login extends React.Component {
 
 	renderSignUp() {
 		return (
-			<div>
+			<div className="signup-fields">
 				<input
 					type="text"
 					placeholder="Enter Name"
@@ -49,7 +51,9 @@ class Login extends React.Component {
 					placeholder="Password"
 					onChange={(e) => this.setState({ password: e.target.value })}
 				/>
-				<button onClick={() => this.handleSignUp()}>Submit</button>
+				<button className="button submit" onClick={() => this.handleSignUp()}>
+					Submit
+				</button>
 			</div>
 		);
 	}
@@ -57,11 +61,13 @@ class Login extends React.Component {
 	render() {
 		return (
 			<div className="login-page-container">
-				<div className="logo"></div>
+				<div className="logo">
+					<i className="fas fa-dumbbell"></i>
+				</div>
 				<div className="login-options">
 					<div className="email-login">
-						Sign In With Email
-						<div>
+						<div className="login-fields">
+							Log In With Email
 							<input
 								type="email"
 								placeholder="Email address"
@@ -72,21 +78,25 @@ class Login extends React.Component {
 								placeholder="Password"
 								onChange={(e) => this.setState({ password: e.target.value })}
 							/>
-							<button onClick={(e) => this.handleLocalLogin(e)}>Submit</button>
+							<button
+								className="button submit"
+								onClick={(e) => this.handleLocalLogin(e)}
+							>
+								Submit
+							</button>
 						</div>
 					</div>
-					<div className="google-login">
-						<button>Login with Google</button>
-					</div>
-					<div className="fb-login">
-						<button>Login with Facebook</button>
+					<div className="oauth">
+						<button className="button google-button">Login with Google</button>
+						<button className="button fb-button">Login with Facebook</button>
 					</div>
 				</div>
-				<div className="signup">
-					<button onClick={() => this.setState({ showSignUp: true })}>
-						Sign Up
-					</button>
-				</div>
+				<button
+					className="button signup-button"
+					onClick={() => this.setState({ showSignUp: true })}
+				>
+					Sign Up
+				</button>
 				{this.state.showSignUp ? this.renderSignUp() : null}
 			</div>
 		);

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { returnErrors } from "./errorActions";
+import { returnErrors, clearErrors } from "./errorActions";
 import {
 	USER_LOADED,
 	USER_LOADING,
@@ -23,10 +23,14 @@ export const loadUser = () => (dispatch, getState) => {
 			})
 		)
 		.catch((err) => {
-			dispatch(returnErrors(err.response.data, err.response.status));
-			dispatch({
-				type: AUTH_ERROR,
-			});
+			try {
+				dispatch(returnErrors(err.response.data, err.response.status));
+				dispatch({
+					type: AUTH_ERROR,
+				});
+			} catch (e) {
+				returnErrors(e.message, 503);
+			}
 		});
 };
 
@@ -47,12 +51,16 @@ export const register = ({ name, email, password }) => (dispatch) => {
 			})
 		)
 		.catch((err) => {
-			dispatch(
-				returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
-			);
-			dispatch({
-				type: REGISTER_FAIL,
-			});
+			try {
+				dispatch(
+					returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
+				);
+				dispatch({
+					type: REGISTER_FAIL,
+				});
+			} catch (e) {
+				returnErrors(e.message, 503);
+			}
 		});
 };
 
@@ -66,19 +74,24 @@ export const signin = ({ email, password }) => (dispatch) => {
 	const body = JSON.stringify({ email, password });
 	axios
 		.post("http://localhost:5000/auth/signin", body, config)
-		.then((res) =>
+		.then((res) => {
 			dispatch({
 				type: LOGIN_SUCCESS,
 				payload: res.data,
-			})
-		)
-		.catch((err) => {
-			dispatch(
-				returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
-			);
-			dispatch({
-				type: LOGIN_FAIL,
 			});
+			dispatch(clearErrors());
+		})
+		.catch((err) => {
+			try {
+				dispatch(
+					returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
+				);
+				dispatch({
+					type: LOGIN_FAIL,
+				});
+			} catch (e) {
+				returnErrors(e.message, 503);
+			}
 		});
 };
 
