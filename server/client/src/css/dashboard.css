@@ -1,0 +1,24 @@
+.dashboard {
+	height: 100vh;
+	display: grid;
+	grid-template-rows: 1fr 3fr 6fr;
+}
+
+.heading {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.lifts-list {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.lift-item {
+	text-decoration: none;
+	width: 100vw;
+	max-width: 500px;
+	background: #112d4e;
+}

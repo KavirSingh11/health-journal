@@ -30,23 +30,23 @@ router.post("/liftTypes/add", auth, async (req, res) => {
 	});
 	newLift
 		.save()
-		.then(() => res.json(`${name} added`))
+		.then((item) => res.json(item))
 		.catch((err) => res.json(`Error: ${err.message}`));
 });
 router.patch("/liftTypes", auth, async (req, res) => {
+	const newInfo = req.body.newInfo;
 	const email = req.body.email;
 	const name = req.body.name;
-	const newInfo = req.body.newInfo;
 	Lift.findOneAndUpdate({ email, name }, newInfo, { useFindAndModify: false })
-		.then(() => res.status(200).json(`Successfully updated`))
-		.catch((e) => res.status(400).json(`Error: ${err.message}`));
+		.then(() => res.status(200).json({ name, newInfo }))
+		.catch((err) => res.status(400).json(`Error: ${err.message}`));
 });
-router.delete("/liftTypes", auth, async (req, res) => {
+router.post("/liftTypes/del", auth, async (req, res) => {
 	const email = req.body.email;
 	const name = req.body.name;
 
 	Lift.find({ email: email, name: name })
-		.deleteOne(() => res.status(200).json(`${name} successfully removed`))
+		.deleteOne(() => res.status(200).json(name))
 		.catch((err) => res.status(400).json(`Error: ${err.message}`));
 });
 /*------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ router.post("/liftHistory", auth, async (req, res) => {
 	});
 	newLift
 		.save()
-		.then(() => res.json(`${name} on ${date} added`))
+		.then((item) => res.json(item))
 		.catch((err) => res.json(`Error: ${err.message}`));
 });
 router.patch("/liftHistory", auth, async (req, res) => {

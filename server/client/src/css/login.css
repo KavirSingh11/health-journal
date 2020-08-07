@@ -9,7 +9,9 @@
 	width: 80%;
 	height: auto;
 	margin: auto;
-	background-color: #fefaec;
+
+	margin-top: 10vh;
+	background-color: #3f72af;
 	padding: 40px 0;
 	border-radius: 40px;
 }
@@ -31,6 +33,23 @@
 .email-login {
 	display: flex;
 }
+input {
+	max-width: 200px;
+	width: 30vw;
+	text-decoration: none;
+	border: 0;
+	color: white;
+	background-color: #112d4e;
+	border-radius: 10px;
+	padding: 1rem 1rem;
+	margin: 0.5rem 1rem;
+}
+
+input:active {
+	text-decoration: none;
+	border: none;
+}
+
 .submit {
 	width: 10rem;
 }
@@ -38,5 +57,7 @@
 .logo {
 	display: flex;
 	justify-content: center;
+
+	color: #f9f7f7;
 	font-size: 15vh;
 }

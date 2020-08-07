@@ -25,11 +25,23 @@ export default function (state = INITIAL_STATE, action) {
 				loading: false,
 			};
 		case ADD_LIFT:
-			return {};
+			return {
+				...state,
+				lifts: [action.payload, ...state.lifts],
+				loading: false,
+			};
 		case EDIT_LIFT:
-			return {};
+			return {
+				...state,
+				lifts: state.lifts.map((item) =>
+					item.name === action.payload.name ? action.payload.newInfo : item
+				),
+			};
 		case DEL_LIFT:
-			return {};
+			return {
+				...state,
+				lifts: state.lifts.filter((item) => item.name !== action.payload),
+			};
 
 		case GET_HISTORY:
 			return {

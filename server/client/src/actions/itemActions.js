@@ -33,7 +33,7 @@ export const getLifts = (email) => (dispatch, getState) => {
 			dispatch(returnErrors(err.response.data, err.response.status))
 		);
 };
-export const addLift = (token, email, name, sets, reps, weight) => (
+export const addLift = (email, name, sets, reps, weight) => (
 	dispatch,
 	getState
 ) => {
@@ -47,6 +47,37 @@ export const addLift = (token, email, name, sets, reps, weight) => (
 			tokenConfig(getState)
 		)
 		.then((res) => dispatch({ type: ADD_LIFT, payload: res.data }))
+		.catch((err) =>
+			dispatch(returnErrors(err.response.data, err.response.status))
+		);
+};
+
+export const editLift = (email, name, newInfo) => (dispatch, getState) => {
+	dispatch({ type: ITEM_LOADING });
+	const body = JSON.stringify({ email, name, newInfo });
+
+	axios
+		.patch(
+			"http://localhost:5000/api/lifts/liftTypes",
+			body,
+			tokenConfig(getState)
+		)
+		.then((res) => dispatch({ type: EDIT_LIFT, payload: res.data }))
+		.catch((err) =>
+			dispatch(returnErrors(err.response.data, err.response.status))
+		);
+};
+
+export const deleteLift = (email, name) => (dispatch, getState) => {
+	dispatch({ type: ITEM_LOADING });
+	const body = JSON.stringify({ email, name });
+	axios
+		.post(
+			"http://localhost:5000/api/lifts/liftTypes/del",
+			body,
+			tokenConfig(getState)
+		)
+		.then((res) => dispatch({ type: DEL_LIFT, payload: res.data }))
 		.catch((err) =>
 			dispatch(returnErrors(err.response.data, err.response.status))
 		);

@@ -33,23 +33,35 @@ class Login extends React.Component {
 		this.props.signin(user);
 	}
 
+	handleKeyPress(e) {
+		if (e.key === "Enter") {
+			this.handleLocalLogin();
+		}
+	}
+
 	renderSignUp() {
 		return (
 			<div className="signup-fields">
 				<input
+					className="inputField"
 					type="text"
 					placeholder="Enter Name"
 					onChange={(e) => this.setState({ name: e.target.value })}
+					onKeyPress={(e) => this.handleKeyPress(e)}
 				/>
 				<input
+					className="inputField"
 					type="email"
 					placeholder="Enter Email"
 					onChange={(e) => this.setState({ email: e.target.value })}
+					onKeyPress={(e) => this.handleKeyPress(e)}
 				/>
 				<input
+					className="inputField"
 					type="text"
 					placeholder="Password"
 					onChange={(e) => this.setState({ password: e.target.value })}
+					onKeyPress={(e) => this.handleKeyPress(e)}
 				/>
 				<button className="button submit" onClick={() => this.handleSignUp()}>
 					Submit
@@ -67,16 +79,20 @@ class Login extends React.Component {
 				<div className="login-options">
 					<div className="email-login">
 						<div className="login-fields">
-							Log In With Email
+							Lift Buddy
 							<input
+								className="inputField"
 								type="email"
 								placeholder="Email address"
 								onChange={(e) => this.setState({ email: e.target.value })}
+								onKeyPress={(e) => this.handleKeyPress(e)}
 							/>
 							<input
-								type="text"
+								className="inputField"
+								type="password"
 								placeholder="Password"
 								onChange={(e) => this.setState({ password: e.target.value })}
+								onKeyPress={(e) => this.handleKeyPress(e)}
 							/>
 							<button
 								className="button submit"
@@ -86,10 +102,8 @@ class Login extends React.Component {
 							</button>
 						</div>
 					</div>
-					<div className="oauth">
-						<button className="button google-button">Login with Google</button>
-						<button className="button fb-button">Login with Facebook</button>
-					</div>
+					<button className="button google-button">Login with Google</button>
+					<button className="button fb-button">Login with Facebook</button>
 				</div>
 				<button
 					className="button signup-button"
