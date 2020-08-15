@@ -1,7 +1,11 @@
+.user-screen {
+	height: 100vh;
+}
+
 .dashboard {
 	height: 100vh;
 	display: grid;
-	grid-template-rows: 1fr 3fr 6fr;
+	grid-template-rows: 0.5fr 4fr 5fr 0.5fr;
 }
 
 .heading {
@@ -9,16 +13,63 @@
 	flex-direction: row;
 	justify-content: space-between;
 }
-
+.title-card {
+	font-size: 2rem;
+}
 .lifts-list {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	padding-bottom: 6rem;
 }
 
 .lift-item {
 	text-decoration: none;
+	font-family: "Raleway", sans-serif;
 	width: 100vw;
 	max-width: 500px;
 	background: #112d4e;
+	color: #f9f7f7;
+	display: grid;
+	grid-template-columns: 80% 20%;
+}
+.lift-name {
+	display: flex;
+	float: left;
+	margin-left: 1rem;
+}
+.enter-history {
+	height: 80%;
+	width: 90%;
+	margin: auto;
+}
+.edit-history {
+	float: right;
+	margin-right: 10px;
+}
+.edit-lift {
+	margin-left: 10px;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	background-color: #112d4e;
+}
+
+.add-lift {
+	height: 5rem;
+	width: 5rem;
+	color: #112d4e;
+	background-color: #f9f7f7;
+}
+.logout {
+	width: 5rem;
+	color: #112d4e;
+	background-color: #f9f7f7;
 }

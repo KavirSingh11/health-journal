@@ -76,10 +76,10 @@ class Login extends React.Component {
 				<div className="logo">
 					<i className="fas fa-dumbbell"></i>
 				</div>
+				<div className="title">LifTrack</div>
 				<div className="login-options">
 					<div className="email-login">
 						<div className="login-fields">
-							Lift Buddy
 							<input
 								className="inputField"
 								type="email"

@@ -17,6 +17,7 @@ export const EDIT_LIFT = "EDIT_LIFTS";
 export const DEL_LIFT = "DEL_LIFTS";
 
 export const ADD_HISTORY = "ADD_HISTORY";
-export const GET_HISTORY = "GET_HISTORY";
+export const GET_ALL_HISTORY = "GET_ALL_HISTORY";
+export const GET_DATE_HISTORY = "GET_DATE_HISTORY";
 export const EDIT_HISTORY = "EDIT_HISTORY";
 export const DEL_HISTORY = "DEL_HISTORY";

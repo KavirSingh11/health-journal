@@ -5,7 +5,8 @@ import {
 	EDIT_LIFT,
 	DEL_LIFT,
 	ADD_HISTORY,
-	GET_HISTORY,
+	GET_ALL_HISTORY,
+	GET_DATE_HISTORY,
 	EDIT_HISTORY,
 	DEL_HISTORY,
 	ITEM_LOADING,
@@ -13,43 +14,40 @@ import {
 import { returnErrors } from "./errorActions";
 import { tokenConfig } from "./authActions";
 
-export const getLifts = (email) => (dispatch, getState) => {
+export const getLifts = (email) => async (dispatch, getState) => {
 	dispatch({ type: ITEM_LOADING });
 	const body = JSON.stringify({ email });
 
-	axios
+	const response = await axios
 		.post(
 			"http://localhost:5000/api/lifts/liftTypes/get",
 			body,
 			tokenConfig(getState)
 		)
-		.then((res) =>
-			dispatch({
-				type: GET_LIFTS,
-				payload: res.data,
-			})
-		)
 		.catch((err) =>
 			dispatch(returnErrors(err.response.data, err.response.status))
 		);
+	dispatch({
+		type: GET_LIFTS,
+		payload: response.data,
+	});
 };
-export const addLift = (email, name, sets, reps, weight) => (
+export const addLift = (email, name, sets, reps, weight) => async (
 	dispatch,
 	getState
 ) => {
 	dispatch({ type: ITEM_LOADING });
 	const body = JSON.stringify({ email, name, sets, reps, weight });
-
-	axios
+	const response = await axios
 		.post(
 			"http://localhost:5000/api/lifts/liftTypes/add",
 			body,
 			tokenConfig(getState)
 		)
-		.then((res) => dispatch({ type: ADD_LIFT, payload: res.data }))
 		.catch((err) =>
 			dispatch(returnErrors(err.response.data, err.response.status))
 		);
+	dispatch({ type: ADD_LIFT, payload: response.data });
 };
 
 export const editLift = (email, name, newInfo) => (dispatch, getState) => {
@@ -82,8 +80,10 @@ export const deleteLift = (email, name) => (dispatch, getState) => {
 			dispatch(returnErrors(err.response.data, err.response.status))
 		);
 };
+/*------------------------------------------------------------------------
 
-export const getLiftHistory = (email, name) => (dispatch, getState) => {
+------------------------------------------------------------------------- */
+export const getAllHistory = (email, name) => (dispatch, getState) => {
 	dispatch({ type: ITEM_LOADING });
 	const body = JSON.stringify({ email, name });
 	axios
@@ -94,7 +94,7 @@ export const getLiftHistory = (email, name) => (dispatch, getState) => {
 		)
 		.then((res) =>
 			dispatch({
-				type: GET_HISTORY,
+				type: GET_ALL_HISTORY,
 				payload: res.data,
 			})
 		)
@@ -103,6 +103,37 @@ export const getLiftHistory = (email, name) => (dispatch, getState) => {
 		);
 };
 
+export const getDateHistory = () => (dispatch, getState) => {
+	dispatch({ type: ITEM_LOADING });
+};
+
+export const addToHistory = (email, name, date, weight) => async (
+	dispatch,
+	getState
+) => {
+	dispatch({ type: ITEM_LOADING });
+	const body = JSON.stringify({ email, name, date, weight });
+
+	const response = await axios
+		.post(
+			"http://localhost:5000/api/lifts/liftHistory",
+			body,
+			tokenConfig(getState)
+		)
+		.catch((err) =>
+			dispatch(returnErrors(err.response.data, err.response.status))
+		);
+	dispatch({
+		type: ADD_HISTORY,
+		payload: response.data,
+	});
+};
+export const editHistory = () => (dispatch, getState) => {
+	dispatch({ type: ITEM_LOADING });
+};
+export const deleteHistory = () => (dispatch, getState) => {
+	dispatch({ type: ITEM_LOADING });
+};
 export const setLoading = () => {
 	return {
 		type: ITEM_LOADING,

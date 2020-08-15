@@ -96,13 +96,11 @@ router.patch("/liftHistory", auth, async (req, res) => {
 		.then(() => res.status(200).json(`Successfully updated`))
 		.catch((e) => res.status(400).json(`Error: ${err.message}`));
 });
-router.delete("/liftHistory", auth, async (req, res) => {
+router.post("/liftHistory", auth, async (req, res) => {
 	const email = req.body.email;
 	const date = req.body.date;
 	LiftHistory.find({ email: email, date: date })
-		.deleteOne(() =>
-			res.status(200).json(`Lift on ${date} successfully removed`)
-		)
+		.deleteOne(() => res.status(200).json(date))
 		.catch((err) => res.status(400).json(`Error: ${err.message}`));
 });
 module.exports = router;

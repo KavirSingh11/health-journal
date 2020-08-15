@@ -2,23 +2,30 @@ import React from "react";
 import { connect } from "react-redux";
 
 import Modal from "../Modal";
+import Chart from "../Chart";
 import { signout } from "../../actions/authActions";
 import {
 	getLifts,
 	addLift,
 	editLift,
 	deleteLift,
-	getLiftHistory,
+	getAllHistory,
+	getDateHistory,
+	addToHistory,
+	editHistory,
+	deleteHistory,
 } from "../../actions/itemActions";
 import "../../css/dashboard.css";
 class Dashboard extends React.Component {
 	state = {
-		detailLift: null,
 		showModal: false,
 		modalType: null,
 		modalFunction: null,
 		modalItem: null,
+
+		detailLift: null,
 		editItemName: null,
+
 		newLift: {
 			email: this.props.email,
 			name: null,
@@ -26,10 +33,28 @@ class Dashboard extends React.Component {
 			reps: null,
 			weight: null,
 		},
+
+		newWeight: null,
+		newDate: null,
 	};
-	async componentDidMount() {
+
+	componentDidMount() {
+		this.loadData();
+		this.setDate();
+	}
+	async loadData() {
 		await this.props.getLifts(this.props.email);
-		await this.setState({ detailLift: this.props.lifts[0] });
+		await this.props.getAllHistory(this.props.email, this.props.lifts[0].name);
+		this.setState({ detailLift: this.props.lifts[0] });
+	}
+	setDate() {
+		var today = new Date();
+		var dd = String(today.getDate()).padStart(2, "0");
+		var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+		var yyyy = today.getFullYear();
+		today = mm + "-" + dd + "-" + yyyy;
+
+		this.setState({ newDate: today });
 	}
 	/*-----------------------------------------------------------------------------------------------------------
 	Helper Functions
@@ -37,12 +62,11 @@ class Dashboard extends React.Component {
 	handleLogout() {
 		this.props.signout();
 	}
-	showModal() {
-		this.setState({ showModal: true });
+
+	getLiftsOnDate() {
+		return;
 	}
-	hideModal() {
-		this.setState({ showModal: false });
-	}
+
 	resetNewLift() {
 		this.setState({
 			...this.state.newLift,
@@ -53,6 +77,13 @@ class Dashboard extends React.Component {
 			weight: null,
 		});
 	}
+
+	showModal() {
+		this.setState({ showModal: true });
+	}
+	hideModal() {
+		this.setState({ showModal: false });
+	}
 	getModalFunction() {
 		const modalType = this.state.modalType;
 		if (modalType === "createLift") {
@@ -62,8 +93,10 @@ class Dashboard extends React.Component {
 			return this.editLift();
 		}
 		if (modalType === "addHistory") {
+			return this.addHistory();
 		}
 		if (modalType === "editHistory") {
+			return this.editHistory();
 		}
 	}
 	getModalType() {
@@ -75,8 +108,10 @@ class Dashboard extends React.Component {
 			return this.renderEditLiftModal();
 		}
 		if (modalType === "addHistory") {
+			return this.renderAddHistoryModal();
 		}
 		if (modalType === "editHistory") {
+			return this.renderEditHistoryModal();
 		}
 	}
 	/*-----------------------------------------------------------------------------------------------------------
@@ -84,11 +119,18 @@ class Dashboard extends React.Component {
 ------------------------------------------------------------------------------------------------------------*/
 	addLift() {
 		const lift = this.state.newLift;
+		console.log(lift);
 		this.props.addLift(
 			lift.email,
 			lift.name,
 			lift.sets,
 			lift.reps,
+			lift.weight
+		);
+		this.props.addToHistory(
+			lift.email,
+			lift.name,
+			this.state.newDate,
 			lift.weight
 		);
 		this.resetNewLift();
@@ -110,6 +152,19 @@ class Dashboard extends React.Component {
 		await this.setState({ detailLift: this.props.lifts[0] });
 		this.hideModal();
 	}
+
+	addHistory() {
+		this.props.addToHistory(
+			this.props.email,
+			this.state.detailLift.name,
+			this.state.newDate,
+			this.state.newWeight
+		);
+		this.setDate();
+		this.setState({ newWeight: null });
+		this.hideModal();
+	}
+	editHistory() {}
 	/*-----------------------------------------------------------------------------------------------------------
 	Modal Render Functions
 ------------------------------------------------------------------------------------------------------------*/
@@ -236,22 +291,52 @@ class Dashboard extends React.Component {
 	renderAddHistoryModal() {
 		return (
 			<div>
-				<h1>Add Lift</h1>
-				<div></div>
+				<h1 style={{ paddingLeft: "15px" }}>
+					Add {this.state.detailLift.name}
+				</h1>
+				<div className="modal-form">
+					<input
+						placeholder="How much weight?"
+						type="number"
+						onChange={(e) =>
+							this.setState({
+								newWeight: e.target.value,
+							})
+						}
+					/>
+					<input
+						defaultValue={this.state.newDate}
+						type="text"
+						onChange={(e) => this.setState({ newDate: e.target.value })}
+					/>
+				</div>
 			</div>
 		);
 	}
 	renderEditHistoryModal() {
 		return (
 			<div>
-				<h1>Edit Lift</h1>
-				<div></div>
+				<h1>Edit {this.state.detailLift.name} lifts</h1>
+				<div className="history-list">
+					{this.props.history.map((item) => {
+						return (
+							<div>
+								<input defaultValue={item.date.slice(0, 10)} type="text" />
+								<input defaultValue={item.weight} type="number" />
+							</div>
+						);
+					})}
+				</div>
 			</div>
 		);
 	}
 
 	/*-----------------------------------------------------------------------------------------------------------
 	Render Functions
+
+	NOTES: 
+		- fix header and add a footer
+
 ------------------------------------------------------------------------------------------------------------*/
 
 	renderLifts() {
@@ -262,10 +347,19 @@ class Dashboard extends React.Component {
 						className="lift-item"
 						onClick={() => {
 							this.setState({ detailLift: lift });
-							this.props.getLiftHistory(this.props.email, lift.name);
+							this.props.getAllHistory(this.props.email, lift.name);
 						}}
 					>
-						<h1>{lift.name}</h1>
+						<h1 className="lift-name">{lift.name}</h1>
+						<button
+							className="enter-history"
+							onClick={() => {
+								this.setState({ modalType: "addHistory" });
+								this.showModal();
+							}}
+						>
+							+
+						</button>
 					</button>
 				</div>
 			);
@@ -277,8 +371,16 @@ class Dashboard extends React.Component {
 
 		return (
 			<div className="lift-info">
-				{this.state.detailLift.name}:{this.state.detailLift.weight}
-				{console.log(this.props.history)}
+				<Chart
+					lift={this.state.detailLift.name}
+					weights={this.props.history.map((item) => item.weight)}
+					dates={this.props.history.map((item) =>
+						this.props.history.length > 5
+							? item.date.slice(5, 10)
+							: item.date.slice(0, 10)
+					)}
+					startWeight={this.state.detailLift.weight}
+				/>
 				<button
 					className="edit-lift"
 					onClick={() => {
@@ -289,16 +391,25 @@ class Dashboard extends React.Component {
 				>
 					Edit
 				</button>
+				{/* <button
+					className="edit-history"
+					onClick={() => {
+						this.setState({ modalType: "editHistory" });
+						this.showModal();
+					}}
+				>
+					Edit History
+				</button> */}
 			</div>
 		);
-		//display graph of growth in weight
-		//show other growth stats like flat increase and percentage increase
-		//^ based on curr weight and weight in first entry (api call needs to be sorted by date entered)
 	}
 
 	render() {
+		if (this.props.isLoading) {
+			return <div>Loading</div>;
+		}
 		return (
-			<div className="dashboard">
+			<div className="user-screen">
 				{this.state.showModal ? (
 					<Modal
 						toggleModal={() => this.hideModal()}
@@ -307,22 +418,31 @@ class Dashboard extends React.Component {
 						{this.getModalType()}
 					</Modal>
 				) : null}
-				<div className="heading">
-					<div className="greeting">Welcome {this.props.name}</div>
-					<button
-						className="add-lift"
-						onClick={() => {
-							this.setState({ modalType: "createLift" });
-							this.showModal();
-						}}
-					>
-						+
-					</button>
-					<button onClick={() => this.handleLogout()}>Logout</button>
-				</div>
-				{this.state.detailLift ? this.renderInfo() : null}
+				<div className="dashboard">
+					<div className="heading">
+						<div className="greeting">Welcome {this.props.name}</div>
+						<div className="title-card">LifTrack</div>
+					</div>
+					{this.state.detailLift ? this.renderInfo() : null}
 
-				<div className="lifts-list">{this.renderLifts()}</div>
+					<div className="lifts-list">{this.renderLifts()}</div>
+
+					<div className="footer">
+						<button className="logout" onClick={() => this.handleLogout()}>
+							Logout
+						</button>
+
+						<button
+							className="add-lift"
+							onClick={() => {
+								this.setState({ modalType: "createLift" });
+								this.showModal();
+							}}
+						>
+							+
+						</button>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -347,5 +467,9 @@ export default connect(mapStateToProps, {
 	addLift,
 	editLift,
 	deleteLift,
-	getLiftHistory,
+	getAllHistory,
+	getDateHistory,
+	addToHistory,
+	editHistory,
+	deleteHistory,
 })(Dashboard);
