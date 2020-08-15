@@ -98,7 +98,7 @@ class Login extends React.Component {
 								className="button submit"
 								onClick={(e) => this.handleLocalLogin(e)}
 							>
-								Submit
+								Log In
 							</button>
 						</div>
 					</div>
