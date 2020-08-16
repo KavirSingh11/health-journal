@@ -102,8 +102,8 @@ class Login extends React.Component {
 							</button>
 						</div>
 					</div>
-					<button className="button google-button">Login with Google</button>
-					<button className="button fb-button">Login with Facebook</button>
+					{/* <button className="button google-button">Login with Google</button>
+					<button className="button fb-button">Login with Facebook</button> */}
 				</div>
 				<button
 					className="button signup-button"

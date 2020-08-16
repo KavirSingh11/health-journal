@@ -44,8 +44,15 @@ class Dashboard extends React.Component {
 	}
 	async loadData() {
 		await this.props.getLifts(this.props.email);
-		await this.props.getAllHistory(this.props.email, this.props.lifts[0].name);
-		this.setState({ detailLift: this.props.lifts[0] });
+		try {
+			await this.props.getAllHistory(
+				this.props.email,
+				this.props.lifts[0].name
+			);
+			this.setState({ detailLift: this.props.lifts[0] });
+		} catch (e) {
+			console.log(e);
+		}
 	}
 	setDate() {
 		var today = new Date();
@@ -119,7 +126,6 @@ class Dashboard extends React.Component {
 ------------------------------------------------------------------------------------------------------------*/
 	addLift() {
 		const lift = this.state.newLift;
-		console.log(lift);
 		this.props.addLift(
 			lift.email,
 			lift.name,
@@ -407,6 +413,22 @@ class Dashboard extends React.Component {
 	render() {
 		if (this.props.isLoading) {
 			return <div>Loading</div>;
+		}
+		if (!this.props.lifts) {
+			return (
+				<div>
+					<div>Add your first lift</div>
+					<button
+						className="add-lift"
+						onClick={() => {
+							this.setState({ modalType: "createLift" });
+							this.showModal();
+						}}
+					>
+						+
+					</button>
+				</div>
+			);
 		}
 		return (
 			<div className="user-screen">

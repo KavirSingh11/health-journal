@@ -48,6 +48,9 @@ router.post("/liftTypes/del", auth, async (req, res) => {
 	Lift.find({ email: email, name: name })
 		.deleteOne(() => res.status(200).json(name))
 		.catch((err) => res.status(400).json(`Error: ${err.message}`));
+	LiftHistory.deleteMany({ email: email, name: name }).catch((err) =>
+		res.status(400).json(`Error: ${err.message}`)
+	);
 });
 /*------------------------------------------------------------------------------
 
@@ -103,4 +106,5 @@ router.post("/liftHistory", auth, async (req, res) => {
 		.deleteOne(() => res.status(200).json(date))
 		.catch((err) => res.status(400).json(`Error: ${err.message}`));
 });
+
 module.exports = router;

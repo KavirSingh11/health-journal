@@ -73,3 +73,11 @@
 	color: #112d4e;
 	background-color: #f9f7f7;
 }
+
+@media (min-width: 1100px) {
+	.footer {
+		position: relative;
+		min-width: 1000px;
+		justify-self: center;
+	}
+}
